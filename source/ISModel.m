@@ -22,8 +22,13 @@
     self = [super init];
     if (self) {
         self.db = [FMDatabase databaseWithPath:@"/usr/share/iSwipe/dictionaries.db"];
+        [self.db open];
     }
     return self;
+}
+
+- (void)dealloc {
+    [self.db close];
 }
 
 - (NSArray *)findMatch:(ISData *)data{
@@ -38,19 +43,18 @@
         [iswords addObject:[ISWord word:tmp[@"Word"] match:tmp[@"Match"] weight:0 count:[tmp[@"Count"] integerValue]]];
     }*/
     
-    [self.db open];
-    
     NSMutableArray *iswords = [NSMutableArray array];
     
-    NSString *like = [NSString stringWithFormat:@"%c%%%c",[data.keys[0] letter],[data.keys[data.keys.count-1] letter]];
+    int first = [(data.keys)[0] letter];
+    int last = [(data.keys)[data.keys.count-1] letter];
+    
+    NSString *like = [NSString stringWithFormat:@"%c%%%c",first,last];
     FMResultSet *s = [self.db executeQuery:@"SELECT word,match FROM dict_en WHERE match LIKE ?",like];
     while ([s next]) {
         NSString *word = [s stringForColumn:@"word"];
         NSString *match = [s stringForColumn:@"match"];
         [iswords addObject:[ISWord word:word match:match weight:0]];
     }
-    
-    [self.db close];
 
     id<ISAlgoProtocol> algo = [[ISAlgoAngleDiffGreedy alloc] init];
     NSArray * arr = [algo findMatch:data dict:iswords];
