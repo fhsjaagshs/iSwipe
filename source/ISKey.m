@@ -8,20 +8,19 @@
 
 #import "ISKey.h"
 #import "ISDefines.h"
+#import "CGPointWrapper.h"
 
 @implementation ISKey
 
-@synthesize letter, angle, avg, pts;
-
-+(id)keyWithLetter:(char)c{
-    ISKey * k = [[ISKey alloc] init];
++ (ISKey *)keyWithLetter:(char)c {
+    ISKey * k = [[ISKey alloc]init];
     k.angle = 0;
     k.letter = c;
     k.pts = [NSMutableArray array];
     return k;
 }
 
--(void)add:(CGPoint)p{
+- (void)add:(CGPoint)p {
     [self.pts addObject:[CGPointWrapper wrapperWithPoint:p]];
 }
 
@@ -29,38 +28,46 @@ static inline double calcAngle(CGPoint p1, CGPoint p2, CGPoint p3){
     return vecAng(p1.x-p2.x, p1.y-p2.y, p2.x-p3.x, p2.y-p3.y);
 }
 
--(void)compute{
-    if( self.pts.count >= 3 ){
-        CGPoint p1 = [(self.pts)[self.pts.count-1] point];
+// This method is both over-engineered and 
+// Over optimized. I know.
+- (void)compute {
+    if (_pts.count >= 3) {
+        CGPoint p1 = [_pts.lastObject point];
         CGPoint p2 = CGPointZero;
-        CGPoint p3 = [(self.pts)[0] point];
+        CGPoint p3 = [_pts.firstObject point];
         
-        //find farthest point away
+        // find farthest point away from p1 and p2
+		// & calc avg along the way
         double max = 0;
-        for( int i = 1; i<self.pts.count-1; i++){
-            CGPoint pp = [(self.pts)[i] point];
+		float tx = 0, ty = 0;
+		
+		for (CGPointWrapper *wrapper in _pts) {
+            CGPoint pp = wrapper.point;
             double dt = dist(pp.x-p1.x, pp.y-p1.y) + dist(pp.x-p3.x,pp.y-p3.y);
-            if( dt > max){
+            if (dt > max) {
                 max = dt;
                 p2 = pp;
             }
-        }
-        
+			
+	        tx += pp.x;
+	        ty += pp.y;
+		}
+		
         self.angle = calcAngle(p1, p2, p3);
-        
+		_avg = CGPointMake(tx/_pts.count, ty/_pts.count);
+    } else {
+		// Only two points so calcAngle() makes no sense
+		
+	    float tx = 0, ty = 0;
+    
+	    for (CGPointWrapper *p in _pts) {
+	        CGPoint pp = p.point;
+	        tx += pp.x;
+	        ty += pp.y;
+	    }
+    
+	    _avg = CGPointMake(tx/_pts.count, ty/_pts.count);
     }
-    
-    float avgx = 0, avgy = 0;
-    
-    for(CGPointWrapper *p in self.pts){
-        CGPoint pt = p.point;
-        avgx += pt.x;
-        avgy += pt.y;
-    }
-    
-    avg = CGPointMake(avgx/self.pts.count, avgy/self.pts.count);
-    
 }
-
 
 @end

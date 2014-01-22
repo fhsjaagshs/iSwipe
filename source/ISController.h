@@ -17,7 +17,6 @@
 @property (nonatomic, strong) ISScribbleView *scribbleView;
 @property (nonatomic, strong) ISData *swipe;
 @property (nonatomic, readonly) BOOL isSwyping;
-//@property (nonatomic, assign) BOOL charAdded;
 
 + (ISController *)sharedInstance;
 

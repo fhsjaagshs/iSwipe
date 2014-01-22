@@ -1,5 +1,5 @@
 //
-//  SwypeData.m
+//  ISData.m
 //  iSwipe
 //
 //  Created by Andrew Liu on 6/4/12.
@@ -7,6 +7,13 @@
 //
 
 #import "ISData.h"
+
+#import "ISKey.h"
+#import "CGPointWrapper.h"
+#import "ISAlgoAngleDiffGreedy.h"
+#import "ISAlgoAngleDiffDP.h"
+
+#import "fmdb/FMDatabase.h"
 
 @implementation ISData
 
@@ -36,5 +43,49 @@
     [self.cur compute];
 }
 
+- (NSArray *)findMatches {
+    NSMutableArray *iswords = [NSMutableArray array];
+    
+    int first = [self.keys.firstObject letter];
+    int last = [self.keys.lastObject letter];
+    
+    NSString *like = [NSString stringWithFormat:@"%c%%%c",first,last];
+    
+    // Intentional, iSwipe takes no performance hit from this.
+	FMDatabase *db = [FMDatabase databaseWithPath:@"/usr/share/iSwipe/dictionaries.db"];
+	
+    BOOL success = [db open]; // This is where the sqlite3 object is created
+	
+	if (!success) {
+        [db close]; // Not 100% sure of this one
+        return [NSMutableArray array];
+    }
+
+    FMResultSet *s = [db executeQuery:@"SELECT word,match FROM dict_en WHERE match LIKE ?",like];
+    while ([s next]) {
+        NSString *word = [s stringForColumn:@"word"];
+        NSString *match = [s stringForColumn:@"match"];
+        [iswords addObject:[ISWord word:word match:match weight:0]];
+    }
+	
+	[s close];
+    [db close];
+
+	NSMutableArray *arr = [ISAlgoAngleDiffGreedy findMatch:self dict:iswords];
+	[arr sortUsingSelector:@selector(compare:)];
+	
+    if (arr.count == 0) { return arr; }
+
+    NSMutableArray *ret = [NSMutableArray array];
+    double best = [arr[0] weight];
+	
+    for (ISWord *word in arr) {
+        if (word.weight > best*.5) {
+            [ret addObject:word];
+		}
+    }
+	
+    return ret;
+}
 
 @end

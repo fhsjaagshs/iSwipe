@@ -1,5 +1,4 @@
 #import "ISController.h"
-#import "ISModel.h"
 
 @interface ISController () <ISSuggestionsViewDelegate>
 
@@ -58,14 +57,14 @@
         [self.swipe end];
 
         if (self.swipe.keys.count >= 2) {
-            NSArray *arr = [[ISModel sharedInstance] findMatch:self.swipe];
+            NSArray *arr = [self.swipe findMatches];
             
             if (arr.count != 0) {
                 if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
                     [self deleteChar];
                 }
 				
-                [self addInput:[arr[0] word]];
+                [self addInput:[arr.firstObject word]];
 				
                 if (arr.count > 1) {
 					_suggestionsView.suggestions = arr;

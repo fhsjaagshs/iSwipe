@@ -1,16 +1,15 @@
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 
-#import "ISKey.h"
-//#import "ISUtils.h"
-#import "CGPointWrapper.h"
+@class ISKey;
 
 @interface ISData : NSObject
 
 @property (nonatomic, strong) ISKey *cur;
 @property (nonatomic, strong) NSMutableArray *keys;
 
-- (void)addData:(CGPoint)p forKey:(NSString*)k;
+- (void)addData:(CGPoint)p forKey:(NSString *)k;
 - (void)end;
+
+- (NSArray *)findMatches;
 
 @end

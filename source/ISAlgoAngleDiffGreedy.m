@@ -8,41 +8,44 @@
 
 #import "ISAlgoAngleDiffGreedy.h"
 #import "ISDefines.h"
+#import "ISData.h"
+#import "ISKey.h"
+#import "ISWord.h"
 
 @implementation ISAlgoAngleDiffGreedy
 
-static double getValue(ISData *data, ISWord* iword){
+static double getValue(ISData *data, ISWord* isword){
     int i = 1 ,j = 1;
     double val = BASE;
     NSArray *keys = data.keys;
-    NSString* word = iword.match;
+    NSString *word = isword.match;
     
     for ( ; i < word.length && j < keys.count; j++) {
-        if ([word characterAtIndex:i] == [keys[j] letter]) {
-            while (++i < word.length && [word characterAtIndex:i] == [keys[j] letter]) {
+        char currentKeyLetter = [keys[j] letter];
+        if ([word characterAtIndex:i] == currentKeyLetter) {
+            while (++i < word.length && [word characterAtIndex:i] == currentKeyLetter) {
                 val += BONUS;
             }
-            val += [(ISKey*)keys[j] angle];
+            val += [(ISKey *)keys[j] angle];
         }
     }
     
     
-    if( i != word.length ) val = BAD; //not possible
+    if (i != word.length) { val = BAD; } // not possible
     
     return val;
 }
 
 + (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict{
     NSMutableArray *arr = [NSMutableArray array];
-    //NSLog(@"%@", arr);
+	
     int ct = 0;
-    for(ISWord * str in dict){
+    for (ISWord *str in dict) {
         double val = getValue(data, str);
         str.weight = val*(1+0.5*((int)dict.count-ct)/dict.count);
-        if( val != BAD ){
-            //NSLog(@"%@ %.2f %d %d", str, val, ct, (int)dict.count-ct);
-            [arr addObject:str];
-        }
+		
+        if (val != BAD) { [arr addObject:str]; }
+		
         ct++;
     }
     

@@ -3,7 +3,7 @@ iSwipe
 
 An implementation of Swype, Android's gesture-based keyboard, for jailbroken iOS. iSwipe features word completion and intelligent word selection.
 
-**This is a fork of wyndwarrior/iSwipe** and largely a rewrite at that.
+**This is a fork of wyndwarrior/iSwipe** and largely a rewrite at that. Ergo, credit goes to Andrew Liu (wyndwarrior) for the original implementation.
 
 Coming Soon
 -----------

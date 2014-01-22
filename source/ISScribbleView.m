@@ -1,6 +1,7 @@
 #import "ISScribbleView.h"
-#import "headers/UIKeyboard.h"
 #import "ISDefines.h"
+#import "CGPointWrapper.h"
+#import "headers/UIKeyboard.h"
 
 #define PTSLIM 300
 
@@ -61,10 +62,10 @@
 	    CGContextSetLineWidth(context, 7.5);
 	    CGContextSetRGBStrokeColor(context, 0, .58, .9, 1);
     
-	    CGPoint point = [_points[0] point];
+	    CGPoint point = [_points.firstObject point];
 	    CGContextMoveToPoint(context, point.x, point.y);
 
-	    for (int i = 1; i<pointsCount; i++) {
+	    for (int i = 1; i < pointsCount; i++) {
 			point = [_points[i] point];
 	        CGContextSetRGBStrokeColor(context, 0, .58, .9, pow((double)i/pointsCount, .7));
 	        CGContextSetLineWidth(context, pow((double)i/pointsCount, .55)*9);
@@ -75,7 +76,9 @@
 	}
 }
 
-- (void)drawToTouch:(UITouch*)touch{
+- (void)drawToTouch:(UITouch *)touch{
+	if (!touch) { return; }
+	
     CGPoint point = [touch locationInView:touch.view];
 	
 	while (self.length > PTSLIM) {
