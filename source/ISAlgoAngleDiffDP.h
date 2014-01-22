@@ -16,6 +16,7 @@
 //find best possible matching
 //in practice there is little, if any, difference from greedy
 @interface ISAlgoAngleDiffDP : NSObject <ISAlgoProtocol>
--(NSArray *)findMatch:(ISData *)data dict:(NSArray *)dictionary;
+
++ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dictionary;
 
 @end

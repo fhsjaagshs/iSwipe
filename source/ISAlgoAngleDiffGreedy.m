@@ -31,7 +31,7 @@ static double getValue(ISData *data, ISWord* iword){
     return val;
 }
 
--(NSArray *)findMatch:(ISData *)data dict:(NSArray *)dict{
++ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict{
     NSMutableArray *arr = [NSMutableArray array];
     //NSLog(@"%@", arr);
     int ct = 0;

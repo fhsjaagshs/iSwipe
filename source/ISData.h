@@ -2,7 +2,7 @@
 #import <UIKit/UIKit.h>
 
 #import "ISKey.h"
-#import "ISUtils.h"
+//#import "ISUtils.h"
 #import "CGPointWrapper.h"
 
 @interface ISData : NSObject

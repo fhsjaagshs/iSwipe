@@ -13,6 +13,6 @@
 #import "ISWord.h"
 
 //matches first possible char it can match
-@interface ISAlgoAngleDiffGreedy : NSObject <ISAlgoProtocol>
--(NSArray *)findMatch:(ISData *)data dict:(NSArray *)dictionary;
+@interface ISAlgoAngleDiffGreedy : NSObject
++ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dictionary;
 @end

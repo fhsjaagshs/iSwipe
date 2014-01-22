@@ -14,6 +14,6 @@
 
 @class ISData;
 @protocol ISAlgoProtocol <NSObject>
-@required 
+@optional
 -(NSArray *)findMatch:(ISData *)data dict:(NSArray *)dictionary;
 @end

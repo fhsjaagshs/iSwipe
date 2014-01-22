@@ -35,7 +35,7 @@ static double getValue(ISData *data, ISWord* iword, double** mat){
     return mat[word.length][keys.count];
 }
 
--(NSArray *)findMatch:(ISData *)data dict:(NSArray *)dict{
++ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict{
     NSMutableArray *arr = [NSMutableArray array];
     
     // find maximum word length

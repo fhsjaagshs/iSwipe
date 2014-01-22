@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "CGPointWrapper.h"
-#import "ISUtils.h"
+//#import "ISUtils.h"
 
 @interface ISKey : NSObject{
     char letter;
