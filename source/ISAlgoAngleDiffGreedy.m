@@ -16,11 +16,15 @@ static double getValue(ISData *data, ISWord* iword){
     NSArray *keys = data.keys;
     NSString* word = iword.match;
     
-    for( ; i<word.length && j < keys.count; j++)
-        if( [word characterAtIndex:i] == [keys[j] letter] ){
-            while(++i < word.length && [word characterAtIndex:i] == [keys[j] letter]) val += BONUS;
+    for ( ; i < word.length && j < keys.count; j++) {
+        if ([word characterAtIndex:i] == [keys[j] letter]) {
+            while (++i < word.length && [word characterAtIndex:i] == [keys[j] letter]) {
+                val += BONUS;
+            }
             val += [(ISKey*)keys[j] angle];
         }
+    }
+    
     
     if( i != word.length ) val = BAD; //not possible
     

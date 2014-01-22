@@ -9,6 +9,7 @@
 @property (nonatomic, strong) NSArray *suggestions;
 @property (nonatomic, weak) id <ISSuggestionsViewDelegate> delegate;
 
+- (void)showAfterDelay:(float)delay animated:(BOOL)animated;
 - (void)showAnimated:(BOOL)animated;
 - (void)hideAnimated:(BOOL)animated;
 

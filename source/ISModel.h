@@ -8,7 +8,7 @@
 
 @interface ISModel : NSObject 
 
-+(id)sharedInstance;
--(NSArray *)findMatch:(ISData *)data;
++ (ISModel *)sharedInstance;
+- (NSArray *)findMatch:(ISData *)data;
 
 @end

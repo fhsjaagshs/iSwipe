@@ -11,6 +11,15 @@
 
 @implementation ISSuggestionsView
 
+- (void)showAfterDelay:(float)delay animated:(BOOL)animated {
+    SEL selector = @selector(showAnimated:);
+    NSInvocation *anInvocation = [NSInvocation invocationWithMethodSignature:[ISSuggestionsView instanceMethodSignatureForSelector:selector]];
+    [anInvocation setSelector:selector];
+    [anInvocation setTarget:self];
+    [anInvocation setArgument:&animated atIndex:2];
+    [anInvocation performSelector:@selector(invoke) withObject:nil afterDelay:delay];
+}
+
 - (void)showAnimated:(BOOL)animated {
 	UIKeyboard *kb = [UIKeyboard activeKeyboard];
 	[kb.superview addSubview:self];
