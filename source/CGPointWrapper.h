@@ -1,7 +1,9 @@
 #import <UIKit/UIKit.h>
-@interface CGPointWrapper : NSObject {
-    CGPoint point;
-}
-@property(nonatomic, assign) CGPoint point;
-+(id)wrapperWithPoint:(CGPoint)p;
+
+@interface CGPointWrapper : NSObject
+
+@property (nonatomic, assign) CGPoint point;
+
++ (CGPointWrapper *)wrapperWithPoint:(CGPoint)p;
+
 @end

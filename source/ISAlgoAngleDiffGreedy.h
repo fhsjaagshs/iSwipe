@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ISAlgoProtocol.h"
 #import "ISData.h"
 #import "ISKey.h"
 #import "ISWord.h"

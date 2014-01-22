@@ -8,14 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ISWord : NSObject/*{
-    NSString *word;
-    NSString *match;
-    double weight;
-}*/
-@property(nonatomic, strong) NSString *word;
-@property(nonatomic, strong) NSString *match;
-@property(nonatomic, assign) double weight;
+@interface ISWord : NSObject
+
+@property (nonatomic, strong) NSString *word;
+@property (nonatomic, strong) NSString *match;
+@property (nonatomic, assign) double weight;
 
 + (ISWord *)word:(NSString *)word match:(NSString *)m weight:(double)wei;
 

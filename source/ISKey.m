@@ -7,6 +7,7 @@
 //
 
 #import "ISKey.h"
+#import "ISDefines.h"
 
 @implementation ISKey
 

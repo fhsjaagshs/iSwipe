@@ -26,7 +26,6 @@
     return NSOrderedSame;
 }
 
-
 - (NSString *)description {
     return [NSString stringWithFormat:@"%@(%@) - %.2f",_word,_match,_weight];
 }

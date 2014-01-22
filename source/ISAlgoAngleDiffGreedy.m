@@ -7,6 +7,7 @@
 //
 
 #import "ISAlgoAngleDiffGreedy.h"
+#import "ISDefines.h"
 
 @implementation ISAlgoAngleDiffGreedy
 

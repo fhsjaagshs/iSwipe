@@ -1,5 +1,6 @@
 #import "ISScribbleView.h"
 #import "headers/UIKeyboard.h"
+#import "ISDefines.h"
 
 #define PTSLIM 300
 

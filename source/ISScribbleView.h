@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 #import "CGPointWrapper.h"
-#import "ISUtils.h"
+//#import "ISUtils.h"
 
 @interface ISScribbleView : UIView
 

@@ -7,9 +7,9 @@
 //
 
 #import "ISAlgoAngleDiffDP.h"
+#import "ISDefines.h"
 
 @implementation ISAlgoAngleDiffDP
-
 
 static double getValue(ISData *data, ISWord* iword, double** mat){
     NSArray *keys = data.keys;
@@ -37,14 +37,12 @@ static double getValue(ISData *data, ISWord* iword, double** mat){
 
 + (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict{
     NSMutableArray *arr = [NSMutableArray array];
-    
-    // find maximum word length
+
     int max = 0;
     for(ISWord * word in dict)
         max = MAX(max, word.match.length);
     max ++;
     
-    //
     double** mat = new double*[max];
     for(int i = 0; i<max; i++)
         mat[i] = new double[data.keys.count+1];
