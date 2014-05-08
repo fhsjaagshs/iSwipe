@@ -12,7 +12,7 @@ static float const ANIM_LENGTH = 0.25f;
 @implementation ISSuggestionsView
 
 - (void)showAfterDelay:(float)delay animated:(BOOL)animated {
-  NSInvocation *invoc = [NSInvocation invocationWithMethodSignature:[ISSuggestionsView instanceMethodSignatureForSelector:selector]];
+  NSInvocation *invoc = [NSInvocation invocationWithMethodSignature:[ISSuggestionsView instanceMethodSignatureForSelector:@selector(showAnimated:)]];
   [invoc setSelector:@selector(showAnimated:)];
   [invoc setTarget:self];
   [invoc setArgument:&animated atIndex:2];

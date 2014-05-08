@@ -8,8 +8,10 @@
 
 #import "ISData.h"
 
+#import "ISWord.h"
 #import "ISKey.h"
 #import "ISAlgoAngleDiffGreedy.h"
+//#import "ISAlgoHybrid.h"
 
 #import "fmdb/FMDatabase.h"
 

@@ -121,7 +121,7 @@
     [self kbinput:input];
   }
 	
-	[self kbinput:@" "];
+    [self kbinput:@" "];
 }
     
 - (void)kbinput:(NSString *)input {

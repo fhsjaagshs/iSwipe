@@ -65,7 +65,7 @@ static inline double calcAngle(CGPoint p1, CGPoint p2, CGPoint p3){
       ty += pp.y;
     }
     
-    self.avg = CGPointMake(tx/_pts.count, ty/_pts.count);
+    _avg = CGPointMake(tx/_pts.count, ty/_pts.count);
   }
 }
 
