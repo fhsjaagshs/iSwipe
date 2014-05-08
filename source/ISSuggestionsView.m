@@ -1,6 +1,6 @@
 #import "ISSuggestionsView.h"
 
-#define ANIM_LENGTH 0.25f
+static float const ANIM_LENGTH = 0.25f;
 
 @interface ISSuggestionsView ()
 
@@ -12,12 +12,11 @@
 @implementation ISSuggestionsView
 
 - (void)showAfterDelay:(float)delay animated:(BOOL)animated {
-    SEL selector = @selector(showAnimated:);
-    NSInvocation *anInvocation = [NSInvocation invocationWithMethodSignature:[ISSuggestionsView instanceMethodSignatureForSelector:selector]];
-    [anInvocation setSelector:selector];
-    [anInvocation setTarget:self];
-    [anInvocation setArgument:&animated atIndex:2];
-    [anInvocation performSelector:@selector(invoke) withObject:nil afterDelay:delay];
+  NSInvocation *invoc = [NSInvocation invocationWithMethodSignature:[ISSuggestionsView instanceMethodSignatureForSelector:selector]];
+  [invoc setSelector:@selector(showAnimated:)];
+  [invoc setTarget:self];
+  [invoc setArgument:&animated atIndex:2];
+  [invoc performSelector:@selector(invoke) withObject:nil afterDelay:delay];
 }
 
 - (void)showAnimated:(BOOL)animated {
@@ -52,22 +51,20 @@
 - (void)setSuggestions:(NSArray *)suggestions {
 	_suggestions = suggestions;
 	
-    int curX = 10;
+  int curX = 10;
 	int i = 0;
 	
-	for (UIView *view in _suggestionsView.subviews) {
-		[view removeFromSuperview];
-	}
+  [_suggestionsView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	
 	for (ISWord *word in _suggestions) {
-        NSString *suggestion = [word word];
-		CGSize size = [suggestion sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]}];
-        UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(curX, (self.frame.size.height-size.height-2)/2, size.width+10, size.height+2)];
-        [btn setTitle:suggestion forState:UIControlStateNormal];
-        [btn addTarget:self action:@selector(callDelegateWithSuggestionButton:) forControlEvents:UIControlEventTouchUpInside];
-        btn.titleLabel.font = i==0?[UIFont boldSystemFontOfSize:17]:[UIFont systemFontOfSize:17];
-        [_suggestionsView addSubview:btn];
-        curX+=size.width+20;
+    NSString *suggestion = [word word];
+    CGSize size = [suggestion sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]}];
+    UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(curX, (self.frame.size.height-size.height-2)/2, size.width+10, size.height+2)];
+    [btn setTitle:suggestion forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(callDelegateWithSuggestionButton:) forControlEvents:UIControlEventTouchUpInside];
+    btn.titleLabel.font = i==0?[UIFont boldSystemFontOfSize:17]:[UIFont systemFontOfSize:17];
+    [_suggestionsView addSubview:btn];
+    curX+=size.width+20;
 		i++;
 	}
 	
@@ -85,23 +82,23 @@
 }
 
 - (instancetype)init {
-    self = [super init];
-    if (self) {
-		self.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.7f];
+  self = [super init];
+  if (self) {
+    self.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.7f];
 		
-        self.suggestionsView = [[UIScrollView alloc]init];
-		_suggestionsView.showsHorizontalScrollIndicator = NO;
-        [self addSubview:_suggestionsView];
+    self.suggestionsView = [[UIScrollView alloc]init];
+    _suggestionsView.showsHorizontalScrollIndicator = NO;
+    [self addSubview:_suggestionsView];
 
-        self.close = [[UIButton alloc]init];
-        [_close setTitle:@"X" forState:UIControlStateNormal];
-        [_close addTarget:self action:@selector(closeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-        _close.titleLabel.font = [UIFont systemFontOfSize:17];
-        [self addSubview:_close];
+    self.close = [[UIButton alloc]init];
+    _close.titleLabel.font = [UIFont systemFontOfSize:17];
+    [_close setTitle:@"X" forState:UIControlStateNormal];
+    [_close addTarget:self action:@selector(closeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_close];
         
-        self.alpha = 0;
-    }
-    return self;
+    self.alpha = 0;
+  }
+  return self;
 }
 
 - (void)setFrame:(CGRect)frame {

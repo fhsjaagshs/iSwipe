@@ -30,13 +30,12 @@ static double getValue(ISData *data, ISWord* isword){
         }
     }
     
-    
-    if (i != word.length) { val = BAD; } // not possible
+    if (i != word.length) val = BAD; // not possible
     
     return val;
 }
 
-+ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict{
++ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict {
     NSMutableArray *arr = [NSMutableArray array];
 	
     int ct = 0;
@@ -44,7 +43,7 @@ static double getValue(ISData *data, ISWord* isword){
         double val = getValue(data, str);
         str.weight = val*(1+0.5*((int)dict.count-ct)/dict.count);
 		
-        if (val != BAD) { [arr addObject:str]; }
+        if (val != BAD) [arr addObject:str];
 		
         ct++;
     }

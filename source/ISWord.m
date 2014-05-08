@@ -19,10 +19,10 @@
 }
 
 - (NSComparisonResult)compare:(ISWord *)obj{
-    if(_weight>obj.weight) return NSOrderedAscending;
-    if(_weight<obj.weight) return NSOrderedDescending;
-    if(_word.length<obj.word.length) return NSOrderedAscending;
-    if(_word.length>obj.word.length) return NSOrderedDescending;
+    if (_weight>obj.weight) return NSOrderedAscending;
+    if (_weight<obj.weight) return NSOrderedDescending;
+    if (_word.length<obj.word.length) return NSOrderedAscending;
+    if (_word.length>obj.word.length) return NSOrderedDescending;
     return NSOrderedSame;
 }
 

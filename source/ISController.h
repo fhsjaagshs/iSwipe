@@ -13,6 +13,7 @@
 @interface ISController : NSObject {
     int matchLength;
 }
+
 @property (nonatomic, strong) ISSuggestionsView *suggestionsView;
 @property (nonatomic, strong) ISScribbleView *scribbleView;
 @property (nonatomic, strong) ISData *swipe;
