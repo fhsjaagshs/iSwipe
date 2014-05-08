@@ -1,6 +1,6 @@
 #import "ISScribbleView.h"
 #import "ISDefines.h"
-#import "CGPointWrapper.h"
+//#import "CGPointWrapper.h"
 #import "headers/UIKeyboard.h"
 
 #define PTSLIM 300
@@ -44,9 +44,9 @@
   if (_points.count == 0) return 0;
 	
   double tot = 0;
-  CGPoint p = [_points[0] point];
+  CGPoint p = [_points.firstObject CGPointValue];
   for (int i = 1; i < _points.count; i += 2){
-    CGPoint p2 = [_points[i] point];
+    CGPoint p2 = [_points[i] CGPointValue];
     tot += dist(p2.x-p.x, p2.y-p.y);
     p = p2;
   }
@@ -62,11 +62,11 @@
     CGContextSetLineWidth(context, 7.5);
     CGContextSetRGBStrokeColor(context, 0, .58, .9, 1);
     
-    CGPoint point = [_points.firstObject point];
+    CGPoint point = [_points.firstObject CGPointValue];
     CGContextMoveToPoint(context, point.x, point.y);
 
     for (int i = 1; i < pointsCount; i++) {
-      point = [_points[i] point];
+      point = [_points[i] CGPointValue];
       CGContextSetRGBStrokeColor(context, 0, .58, .9, pow((double)i/pointsCount, .7));
       CGContextSetLineWidth(context, pow((double)i/pointsCount, .55)*9);
       CGContextAddLineToPoint(context, point.x, point.y);
@@ -85,7 +85,7 @@
     [self.points removeObjectAtIndex:0];
 	}
 	
-  [_points addObject:[CGPointWrapper wrapperWithPoint:point]];
+  [_points addObject:[NSValue valueWithCGPoint:point]];
 	
   [self setNeedsDisplay];
 }

@@ -31,6 +31,9 @@
 - (void)forwardMethod:(id)sender sel:(SEL)cmd touches:(NSSet *)touches event:(UIEvent *)event {
   UITouch *touch = [touches anyObject];
   CGPoint point = [touch locationInView:touch.view];
+  
+  // TODO: don't start swyping if not on an actual key
+  
   NSString *key = [[[sender keyHitTest:point] displayString] lowercaseString];
 
   if (cmd == @selector(touchesBegan:withEvent:)) {
@@ -40,21 +43,21 @@
     self.startingTouch = touch;
   } else if (cmd == @selector(touchesMoved:withEvent:)) {
     if (_initialKey && ![_initialKey isEqualToString:key]) {
-			self.initialKey = nil;
+      self.initialKey = nil;
 			
-			[self.scribbleView show];
-			[self.scribbleView drawToTouch:_startingTouch];
-			self.startingTouch = nil;
-		} else {
-      [self.scribbleView drawToTouch:touch];
+      [_scribbleView show];
+      [_scribbleView drawToTouch:_startingTouch];
+      self.startingTouch = nil;
+    } else {
+      [_scribbleView drawToTouch:touch];
 
       if (key.length == 1) {
-        [self.swipe addData:point forKey:key];
+        [_swipe addData:point forKey:key];
       }
 		}
 	} else if (cmd == @selector(touchesEnded:withEvent:)) {
 		self.initialKey = nil;
-    [self.swipe end];
+    [_swipe end];
 
     if (self.swipe.keys.count >= 2) {
       NSArray *arr = [self.swipe findMatches];
@@ -80,21 +83,21 @@
 
 - (void)resetSwipe {
 	self.swipe = [[ISData alloc]init];
-	[self.scribbleView hide];
-	[self.scribbleView resetPoints];
+	[_scribbleView hide];
+	[_scribbleView resetPoints];
 }
 
 - (BOOL)isSwyping {
-  return self.swipe.keys.count > 0;
+  return _swipe.keys.count > 0;
 }
 
 - (void)deleteChar {
-  [[UIKeyboardImpl activeInstance] handleDelete];
+  [[UIKeyboardImpl activeInstance]handleDelete];
 }
 
 - (void)deleteLast {
-  for (int i = 0; i<matchLength; i++) {
-    [[UIKeyboardImpl activeInstance] handleDelete];
+  for (int i = 0; i < matchLength; i++) {
+    [[UIKeyboardImpl activeInstance]handleDelete];
   }   
 }
 
@@ -102,13 +105,13 @@
   [self deleteLast];
   [self deleteChar];
   [self addInput:suggestion];
-  [self.suggestionsView hideAnimated:YES];
+  [_suggestionsView hideAnimated:YES];
 }
 
 - (void)addInput:(NSString *)input{
   UIKeyboardImpl *kb = [UIKeyboardImpl activeInstance];
     
-  matchLength = [input length];
+  matchLength = input.length;
   if ([kb isShifted]) {
     char c = [input characterAtIndex:0];
     if (c <= 'z' && c >= 'a') {
@@ -123,7 +126,7 @@
     [self kbinput:input];
   }
 	
-    [self kbinput:@" "];
+  [self kbinput:@" "];
 }
     
 - (void)kbinput:(NSString *)input {

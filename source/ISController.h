@@ -6,7 +6,6 @@
 #import "headers/UIKBKeyView.h"
 #import "ISScribbleView.h"
 #import "ISSuggestionsView.h"
-#import "CGPointWrapper.h"
 #import "ISData.h"
 
 @class ISSuggestionsView;
