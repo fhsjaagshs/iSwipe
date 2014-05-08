@@ -70,6 +70,8 @@
 					_suggestionsView.suggestions = arr;
 					[_suggestionsView showAnimated:YES];
         }
+      } else {
+          [self deleteChar];
       }
     }
     [self resetSwipe];

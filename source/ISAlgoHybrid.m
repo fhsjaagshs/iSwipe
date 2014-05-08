@@ -6,8 +6,6 @@
 //  Copyright (c) 2012 Nathaniel Symer. All rights reserved.
 //
 
-//static int const straight_angle_leeway = 10;
-
 #import "ISAlgoHybrid.h"
 #import "ISAlgoAngleDiffGreedy.h"
 
