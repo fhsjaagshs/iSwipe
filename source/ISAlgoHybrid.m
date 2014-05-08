@@ -15,11 +15,10 @@
 #import "ISKey.h"
 #import "ISWord.h"
 
-static NSArray *kKeyboardLayout = @["qwertyuiop", "asdfghjkl", "zxcvbnm"];
-
 @implementation ISAlgoHybrid
 
-static double getValue(ISData *data, ISWord* isword) {
+// From ISAlgoAngleDiffGreedy
+/*static double getValue(ISData *data, ISWord* isword) {
     int i = 1 ,j = 1;
     double val = BASE;
     NSArray *keys = data.keys;
@@ -38,336 +37,73 @@ static double getValue(ISData *data, ISWord* isword) {
     if (i != word.length) val = BAD; // not possible
     
     return val;
-}
-
-
-
-/*static double getValue(ISData *data, ISWord* isword){
-    int i = 1 ,j = 1;
-    double val = BASE;
-    NSArray *keys = data.keys;
-    NSString *word = isword.match;
-    
-    for ( ; i < word.length && j < keys.count; j++) {
-        char currentKeyLetter = [keys[j] letter];
-        if ([word characterAtIndex:i] == currentKeyLetter) {
-            while (++i < word.length && [word characterAtIndex:i] == currentKeyLetter) {
-                val += BONUS;
-            }
-            val += [(ISKey *)keys[j] angle];
-        }
-    }
-    
-    if (i != word.length) val = BAD; // not possible
-    
-    // now time to check order
-    // If it's in order, multiply by two
-
-    int word_count = word.length;
-    char cword[word_count];
-    memset(cword, '\0', sizeof(cword)); // make sure word is empty
-    strncpy(cword, word.UTF8String, word_count);
-    
-    int prevIndex = -1;
-    
-    int bestIndex = 0;
-    
-    for (ISKey *key in keys) {
-        int idx = -1;
-
-        for (int i = prevIndex+1; i < word_count; i++) {
-            if (cword[i] == key.letter) {
-                idx = i;
-                break;
-            }
-        }
-        
-        if (idx > bestIndex) {
-            bestIndex = idx;
-        }
-    }
-    
-    if (bestIndex == word_count-1) {
-        val *= 2;
-    }
-
-    return val;
-}*/
-
-/*static double getValue_inner_c(ISData *data, ISWord* isword){
-    NSArray *datakeys = data.keys;
-    
-    int key_count = datakeys.count;
-    char keys[key_count];
-    double angles[key_count];
-    
-    int word_count = isword.match.length;
-    char word[word_count];
-    
-    for (int i = 0; i < key_count; ++i) {
-        keys[i] = [datakeys[i] letter];
-        angles[i] = [(ISKey *)datakeys[i] angle];
-    }
-    
-    memset(word, '\0', sizeof(word)); // make sure word is empty
-    strncpy(word, isword.match.UTF8String, word_count);
-    
-    // Now that we've dumped the ObjC BS
-    
-    // sdfghiuyt
-    // shit
-    
-    // dfghiuy
-    // hi
-    
- 
-    // first, strip off outer character on either end
-    
-    char inner_word[word_count-2];
-    
-    for (int i = 1; i < word_count-1; ++i) {
-        inner_word[i] = word[i];
-    }
-    
-    char inner_keys[key_count-2];
-    double inner_angles[key_count-2];
-    
-    for (int i = 1; i < key_count-1; ++i) {
-        inner_keys[i] = keys[i];
-        inner_angles[i] = angles[i];
-    }
-    
-    word_count -= 2;
-    key_count -= 2;
- 
-     //now check if the word is supported by the keys' characters
-    
-    for (int i = 0; i < word_count; i++) {
-        char w = inner_word[i];
-        
-        int plausible = 0;
-        for (int j = 0; j < key_count; j++) {
-            if (inner_keys[i] == w) {
-                plausible = 1;
-            }
-        }
-        
-        if (plausible) {
-            return -1;
-            break;
-        }
-    }
- 
-    // now weight the words by angle
-
-    double weight = 0;
-    
-    int i = 1 ,j = 1;
-    for ( ; i < word_count && j < key_count; j++) {
-        char currentKeyLetter = inner_keys[j];
-        if (inner_word[i] == currentKeyLetter) {
-            while (++i < word_count && inner_word[i] == currentKeyLetter) {
-                weight -= 5;
-            }
-            weight += inner_angles[j];
-        }
-    }
-    
-    if (i != word_count) return -1;
-    
-    
-    return weight;
-}*/
-
-/*static double getValue_greedy(ISData *data, ISWord* isword){
-    NSArray *datakeys = data.keys;
-    
-    int key_count = datakeys.count;
-    char keys[key_count];
-    double angles[key_count];
-    
-    int word_count = isword.match.length;
-    char word[word_count];
-    
-    for (int i = 0; i < key_count; ++i) {
-        keys[i] = [datakeys[i] letter];
-        angles[i] = [(ISKey *)datakeys[i] angle];
-    }
-    
-    memset(word, '\0', sizeof(word)); // make sure word is empty
-    strncpy(word, isword.match.UTF8String, word_count);
-    
-    // Now that we've dumped the ObjC BS
-    
-    double weight = 0;
-    
-    int i = 1 ,j = 1;
-    for ( ; i < word_count && j < key_count; j++) {
-        char currentKeyLetter = keys[j];
-        if (word[i] == currentKeyLetter) {
-            while (++i < word_count && word[i] == currentKeyLetter) {
-                weight -= 5;
-            }
-            weight += angles[j];
-        }
-    }
-    
-    if (i != word_count) return -1;
-    
-    return weight;
-}
-
-static double getValue_original(ISData *data, ISWord* isword){
-    NSArray *datakeys = data.keys;
-    
-    int key_count = datakeys.count;
-    char keys[key_count];
-    double angles[key_count];
-    
-    int word_count = isword.match.length;
-    char word[word_count];
-
-    for (int i = 0; i < key_count; ++i) {
-      keys[i] = [datakeys[i] letter];
-      angles[i] = [(ISKey *)datakeys[i] angle];
-    }
-    
-    memset(word, '\0', sizeof(word)); // make sure word is empty
-    strncpy(word, isword.match.UTF8String, word_count);
-    
-    // Now that we've dumped the ObjC BS
-
-    double weight = 0;
-    
-    // keys:
-    // sdfghit
-    
-    // words:
-    // shut
-    // shoot
-    // suit
-    // soot
-    // slit
-    // shit
-    
-    // two pass
-    // pass one:
-    // eliminate impossible words (slit, soot, shoot shut)
-    
-    // TODO: inner loop on the word, not the swipe (word is probably shorter than swipe)
-    // iterate through word
-    for (int i = 0; i < word_count; i++) {
-      char w = word[i];
-      
-      int plausible = 1;
-      
-      // check each character in the swipe against the word
-      // If the 
-      for (int j = 0; j < key_count; j++) {
-        char k = keys[j];
-        
-        if (k != w) {
-          plausible = 0;
-          break;
-        }
-      }
-      
-      if (plausible == 0) {
-        weight = -1;
-        break;
-      }
-    }  
-    
-    // The word was not plausible
-    if (weight == -1) return -1;
-    
-    
-    // pass two:
-    // check info about words
-
-    for (int i = 0; i < word_count; i++) {
-      char w = word[i];
-      
-      // check each char against the word
-      for (int j = 0; j < key_count; j++) {
-        char k = keys[j];
-        double angle = angles[j];
-        
-        double w_addition = (w == k) ? angle : 0;
-        
-        // if the angle indicates passing up, multiply addition to weight by 0.5
-       if (angle > 180-straight_angle_leeway && angle < 180+straight_angle_leeway) w_addition *= 0.5;
-          weight += w_addition;
-      }
-    }
-    
-    return weight;
 }*/
 
 + (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict {
-    NSArray *kKeyboardLayout = @[@"qwertyuiop", @"asdfghjkl", @"zxcvbnm"];
-    
-    NSMutableArray *endMatched = [NSMutableArray array];
-    
-    // first check for first and last characters matching
-    for (ISWord *isword in dict) {
-        if ([isword.match characterAtIndex:0] == [data.keys.firstObject letter] && [isword.match characterAtIndex:isword.match.length-1] == [data.keys.lastObject letter]) {
-            [endMatched addObject:isword];
-        }
-    }
-    
-    NSMutableArray *containsWord = [NSMutableArray array];
-    
-    for (ISWord *isword in endMatched) {
-        int i = 0;
-        
-        for (NSString *key in data.keys) {
-            if ([isword.match rangeOfString:key].location != NSNotFound) i++;
-        }
-        
-        if (i == isword.match.length) [containsWord addObject]
-    }
-    
-    NSString *keys = data.keys;
-    NSString *rows = [NSMutableArray array];
-    
-    for (NSString *key in data.keys) {
-        for (int i = 0; i < kKeyboardLayout.count; i++) {
-            NSString *row = kKeyboardLayout[i];
-            if ([row rangeOfString:key].location != NSNotFound && [rows.lastObject intValue] != i) [rows addObject:@(i)];
-        }
-    }
-            
-    int minLength = rows.count;
-    
-    NSMutableArray *matches = [NSMutableArray array];
+	NSArray *kKeyboardLayout = @[@"qwertyuiop", @"asdfghjkl", @"zxcvbnm"];
 
-    for (ISWord *isword in containsWord) {
-        if (isword.match.length > minLength) [matches addObject:isword];
-    }
-    
-    // now add a weight to each word
-    
-    int currWeight = matches.count;
-    
-    for (ISWord *isword in containsWord) {
-        isword.weight = currWeight;
-        currWeight -= 1;
-    }
-    
-    return matches;
-}
-
-/*+ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict {
-  NSMutableArray *matches = [NSMutableArray array];
+	NSArray *keys = data.keys;
 	
-  for (ISWord *isword in dict) {
-    double val = getValue(data, isword);
-    isword.weight = val;
-    if (val != -1) [matches addObject:isword];
-  }
-
-  return matches;
-}*/
+	NSMutableArray *rows = [NSMutableArray array];
+  
+	for (ISKey *iskey in keys) {
+		char key = iskey.letter;
+		for (int i = 0; i < kKeyboardLayout.count; i++) {
+			if ([rows.lastObject intValue] != i) {
+				NSString *row = kKeyboardLayout[i];
+			
+				for (int j = 0; i < row.length; j++) {
+					char curr = [row characterAtIndex:j];
+					if (curr == key) {
+						[rows addObject:@(i)];
+						break;
+					}
+				}
+			}
+		}
+	}
+            
+	int minLength = rows.count;
+	
+	char firstKey = [keys.firstObject letter];
+	char lastKey = [keys.lastObject letter];
+	
+	NSMutableArray *matches = [NSMutableArray array];
+    
+	for (ISWord *isword in dict) {
+		NSString *match = isword.match;
+		
+		if ([match characterAtIndex:0] == firstKey && [match characterAtIndex:match.length-1] == lastKey) {
+			int i = 0;
+        
+			for (ISKey *key in keys) {
+				for (int j = 0; i < match.length; j++) {
+					char curr = [match characterAtIndex:j];
+					if (curr == key.letter) {
+						i += 1;
+						break;
+					}
+				}
+			}
+        
+			if (i == match.length) {
+				if (isword.match.length > minLength) [matches addObject:isword];
+			}
+		}
+	}
+  
+	//
+	// now add a weight to each word
+	//
+	
+	int currWeight = matches.count;
+    
+	for (ISWord *isword in containsWord) {
+		isword.weight = currWeight;
+		currWeight -= 1;
+	}
+    
+	return matches;
+}
 
 @end
