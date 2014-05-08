@@ -15,9 +15,11 @@
 #import "ISKey.h"
 #import "ISWord.h"
 
+static NSArray *kKeyboardLayout = @["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+
 @implementation ISAlgoHybrid
 
-static double getValue(ISData *data, ISWord* isword){
+static double getValue(ISData *data, ISWord* isword) {
     int i = 1 ,j = 1;
     double val = BASE;
     NSArray *keys = data.keys;
@@ -37,6 +39,8 @@ static double getValue(ISData *data, ISWord* isword){
     
     return val;
 }
+
+
 
 /*static double getValue(ISData *data, ISWord* isword){
     int i = 1 ,j = 1;
@@ -301,6 +305,60 @@ static double getValue_original(ISData *data, ISWord* isword){
 }*/
 
 + (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict {
+    NSArray *kKeyboardLayout = @[@"qwertyuiop", @"asdfghjkl", @"zxcvbnm"];
+    
+    NSMutableArray *endMatched = [NSMutableArray array];
+    
+    // first check for first and last characters matching
+    for (ISWord *isword in dict) {
+        if ([isword.match characterAtIndex:0] == [data.keys.firstObject letter] && [isword.match characterAtIndex:isword.match.length-1] == [data.keys.lastObject letter]) {
+            [endMatched addObject:isword];
+        }
+    }
+    
+    NSMutableArray *containsWord = [NSMutableArray array];
+    
+    for (ISWord *isword in endMatched) {
+        int i = 0;
+        
+        for (NSString *key in data.keys) {
+            if ([isword.match rangeOfString:key].location != NSNotFound) i++;
+        }
+        
+        if (i == isword.match.length) [containsWord addObject]
+    }
+    
+    NSString *keys = data.keys;
+    NSString *rows = [NSMutableArray array];
+    
+    for (NSString *key in data.keys) {
+        for (int i = 0; i < kKeyboardLayout.count; i++) {
+            NSString *row = kKeyboardLayout[i];
+            if ([row rangeOfString:key].location != NSNotFound && [rows.lastObject intValue] != i) [rows addObject:@(i)];
+        }
+    }
+            
+    int minLength = rows.count;
+    
+    NSMutableArray *matches = [NSMutableArray array];
+
+    for (ISWord *isword in containsWord) {
+        if (isword.match.length > minLength) [matches addObject:isword];
+    }
+    
+    // now add a weight to each word
+    
+    int currWeight = matches.count;
+    
+    for (ISWord *isword in containsWord) {
+        isword.weight = currWeight;
+        currWeight -= 1;
+    }
+    
+    return matches;
+}
+
+/*+ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict {
   NSMutableArray *matches = [NSMutableArray array];
 	
   for (ISWord *isword in dict) {
@@ -310,6 +368,6 @@ static double getValue_original(ISData *data, ISWord* isword){
   }
 
   return matches;
-}
+}*/
 
 @end
