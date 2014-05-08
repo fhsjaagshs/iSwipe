@@ -11,7 +11,7 @@
 #import "ISWord.h"
 #import "ISKey.h"
 #import "ISAlgoAngleDiffGreedy.h"
-//#import "ISAlgoHybrid.h"
+#import "ISAlgoHybrid.h"
 
 #import "fmdb/FMDatabase.h"
 
@@ -70,7 +70,7 @@
   [s close];
   [db close];
 
-  NSMutableArray *arr = [ISAlgoAngleDiffGreedy findMatch:self dict:iswords];
+  NSMutableArray *arr = [ISAlgoHybrid findMatch:self dict:iswords];
   [arr sortUsingSelector:@selector(compare:)];
 	
   if (arr.count == 0) return arr;

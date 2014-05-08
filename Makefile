@@ -1,4 +1,4 @@
-export TARGET=iphone:7.0
+export TARGET=iphone:7.1
 export ARCHS=armv7 arm64 armv7s
 
 ADDITIONAL_OBJCFLAGS = -fobjc-arc
