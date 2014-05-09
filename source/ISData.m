@@ -10,7 +10,6 @@
 
 #import "ISWord.h"
 #import "ISKey.h"
-#import "ISAlgoAngleDiffGreedy.h"
 #import "ISAlgoHybrid.h"
 
 #import "fmdb/FMDatabase.h"
@@ -20,17 +19,16 @@
 - (instancetype)init {
   self = [super init];
   if (self) {
-    self.keys = [NSMutableArray array];
-    self.cur = nil;
+    _keys = [NSMutableArray array];
+    _cur = nil;
   }
   return self;
 }
 
 - (void)addData:(CGPoint)p forKey:(NSString *)k {
-    
   if (!k || k.length != 1) return;
 
-  if (!_cur || [k characterAtIndex:0] != self.cur.letter) {
+  if (!_cur || [k characterAtIndex:0] != _cur.letter) {
     [_cur compute];
     self.cur = [ISKey keyWithLetter:[k characterAtIndex:0]];
     [_keys addObject:_cur];
@@ -44,12 +42,9 @@
 }
 
 - (NSArray *)findMatches {
-  NSMutableArray *iswords = [NSMutableArray array];
-    
-  int first = [_keys.firstObject letter];
-  int last = [_keys.lastObject letter];
-    
-  NSString *like = [NSString stringWithFormat:@"%c%%%c",first,last];
+	for (ISKey *key in _keys.mutableCopy) {
+		if (key.intentional == false) [_keys removeObject:key];
+	}
     
   // Intentional, iSwipe takes no performance hit from this.
   FMDatabase *db = [FMDatabase databaseWithPath:@"/usr/share/iSwipe/dictionaries.db"];
@@ -59,6 +54,13 @@
     [db close]; // Not 100% sure of this one
     return [NSMutableArray array];
   }
+	
+  NSMutableArray *iswords = [NSMutableArray array];
+    
+  int first = [_keys.firstObject letter];
+  int last = [_keys.lastObject letter];
+    
+  NSString *like = [NSString stringWithFormat:@"%c%%%c",first,last];
 
   FMResultSet *s = [db executeQuery:@"SELECT word,match FROM dict_en WHERE match LIKE ?",like];
   while ([s next]) {
@@ -70,8 +72,7 @@
   [s close];
   [db close];
 
-  NSMutableArray *arr = [ISAlgoHybrid findMatch:self dict:iswords];
-  [arr sortUsingSelector:@selector(compare:)];
+  NSMutableArray *arr = [[ISAlgoHybrid findMatch:self dict:iswords]sortedArrayUsingSelector:@selector(compare:)];
 	
   if (arr.count == 0) return arr;
 

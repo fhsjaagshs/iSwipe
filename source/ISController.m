@@ -1,4 +1,7 @@
 #import "ISController.h"
+#import "headers/UIKBKeyplaneView.h"
+#import "headers/UIKeyboardLayoutStar.h"
+#import "headers/UIKBTree.h"
 
 @interface ISController () <ISSuggestionsViewDelegate>
 
@@ -32,36 +35,34 @@
   UITouch *touch = [touches anyObject];
   CGPoint point = [touch locationInView:touch.view];
   
-  // TODO: don't start swyping if not on an actual key
-  
-  NSString *key = [[[sender keyHitTest:point] displayString] lowercaseString];
+	UIKBTree *tree = [sender keyHitTest:point];
+  NSString *key = tree.displayString.lowercaseString;
 
   if (cmd == @selector(touchesBegan:withEvent:)) {
-    self.initialKey = key;
-    self.swipe = [[ISData alloc]init];
-    [self.suggestionsView hideAnimated:YES];
-    self.startingTouch = touch;
+		if (key.length == 1) {
+	    self.initialKey = key;
+	    self.swipe = [[ISData alloc]init];
+	    [self.suggestionsView hideAnimated:YES];
+	    self.startingTouch = touch;
+		}
   } else if (cmd == @selector(touchesMoved:withEvent:)) {
     if (_initialKey && ![_initialKey isEqualToString:key]) {
       self.initialKey = nil;
-			
       [_scribbleView show];
-      [_scribbleView drawToTouch:_startingTouch];
       self.startingTouch = nil;
     } else {
-      [_scribbleView drawToTouch:touch];
-
       if (key.length == 1) {
         [_swipe addData:point forKey:key];
       }
 		}
+		[_scribbleView drawToTouch:touch];
 	} else if (cmd == @selector(touchesEnded:withEvent:)) {
 		self.initialKey = nil;
     [_swipe end];
 
-    if (self.swipe.keys.count >= 2) {
-      NSArray *arr = [self.swipe findMatches];
-            
+    if (_swipe.keys.count >= 2) {
+      NSArray *arr = [_swipe findMatches];
+			
       if (arr.count != 0) {
         if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
           [self deleteChar];
@@ -115,9 +116,9 @@
   if ([kb isShifted]) {
     char c = [input characterAtIndex:0];
     if (c <= 'z' && c >= 'a') {
-      [self kbinput:[NSString stringWithFormat:@"%c",[input characterAtIndex:0]-'a'+'A']];
+      [self kbinput:[NSString stringWithFormat:@"%c",c-'a'+'A']];
       if (input.length > 1) {
-        [self kbinput:[input substringFromIndex:1]];	
+        [self kbinput:[input substringFromIndex:1]];
       }
     } else {
       [self kbinput:input];
@@ -131,7 +132,9 @@
     
 - (void)kbinput:(NSString *)input {
   UIKeyboardImpl *kb = [UIKeyboardImpl activeInstance];
-  if ([kb respondsToSelector:@selector(addInputString:)]) {
+	if ([kb respondsToSelector:@selector(insertText:)]) {
+		[kb insertText:input];
+	} else if ([kb respondsToSelector:@selector(addInputString:)]) {
     [kb addInputString:input];
   } else if ([kb respondsToSelector:@selector(handleStringInput:fromVariantKey:)]) {
     [kb handleStringInput:input fromVariantKey:NO];

@@ -1,7 +1,7 @@
 #import <UIKit/UIKit.h>
 #import "headers/UIKeyboardLayoutStar.h"
 #import "headers/UIKeyboardImpl.h"
-#import "headers/UIKBKey.h"
+#import "headers/UIKBTree.h"
 #import "headers/UIKBKeyplaneView.h"
 #import "ISController.h"
 
@@ -30,25 +30,30 @@
 %end
 
 %hook UIKeyboardLayoutStar
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     %orig;
     [[ISController sharedInstance] forwardMethod:self sel:_cmd touches:touches event:event];
 }
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     %orig;
     [[ISController sharedInstance] forwardMethod:self sel:_cmd touches:touches event:event];
 }
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     %orig;
     [[ISController sharedInstance] forwardMethod:self sel:_cmd touches:touches event:event];
+}
+
+- (void)clearInput {
+	%orig;
+	[[ISController sharedInstance].suggestionsView hideAnimated:YES];
 }
 
 %end
 
 %hook UIKeyboard
--(void)removeFromSuperview{
+- (void)removeFromSuperview {
 	[[ISController sharedInstance].suggestionsView hideAnimated:YES];
-    %orig;
+	%orig;
 }
 
 - (void)setFrame:(CGRect)frame {

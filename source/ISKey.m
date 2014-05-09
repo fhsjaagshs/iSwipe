@@ -8,20 +8,27 @@
 
 #import "ISKey.h"
 #import "ISDefines.h"
-#import "CGPointWrapper.h"
+#import "headers/UIKeyboardImpl.h"
 
 @implementation ISKey
 
 + (ISKey *)keyWithLetter:(char)c {
-  ISKey * k = [[ISKey alloc]init];
-  k.angle = 0;
-  k.letter = c;
-  k.pts = [NSMutableArray array];
-  return k;
+	return [[[self class]alloc]initWithLetter:c];
+}
+
+- (instancetype)initWithLetter:(char)c {
+	self = [super init];
+	if (self) {
+	  _angle = 0;
+	  _letter = c;
+	  _pts = [NSMutableArray array];
+		_intentional = YES;
+	}
+	return self;
 }
 
 - (void)add:(CGPoint)p {
-  [self.pts addObject:[NSValue valueWithCGPoint:p]];
+  [_pts addObject:[NSValue valueWithCGPoint:p]];
 }
 
 static inline double calcAngle(CGPoint p1, CGPoint p2, CGPoint p3){
@@ -66,7 +73,16 @@ static inline double calcAngle(CGPoint p1, CGPoint p2, CGPoint p3){
     }
     
     _avg = CGPointMake(tx/_pts.count, ty/_pts.count);
+		
+		// TODO: Potentially set angle to 180??? Would this skew towards words that are 
   }
+	
+	//CALayer *key = [[[UIKeyboardImpl activeInstance]layoutForKeyHitTest]hitTest:_avg];
+	//UIView *layoutStar = [[UIKeyboardImpl activeInstance]hitTest:_avg withEvent:nil];
+	//NSLog(@"is1: %@",[layoutStar hitTest:_avg withEvent:nil]);
+//	CGPoint keyCenter = CGPointMake(key.bounds.size.width/2,key.bounds.size.height/2);
+//	double acceptedRadius = MAX(key.bounds.size.width,key.bounds.size.height)/2;
+//	self.intentional = (dist(keyCenter.x-_avg.x,keyCenter.y-_avg.y) <= acceptedRadius);
 }
 
 @end

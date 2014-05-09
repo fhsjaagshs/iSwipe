@@ -57,14 +57,14 @@ static float const ANIM_LENGTH = 0.25f;
   [_suggestionsView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	
 	for (ISWord *word in _suggestions) {
-    NSString *suggestion = [word word];
-    CGSize size = [suggestion sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]}];
-    UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(curX, (self.frame.size.height-size.height-2)/2, size.width+10, size.height+2)];
-    [btn setTitle:suggestion forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(callDelegateWithSuggestionButton:) forControlEvents:UIControlEventTouchUpInside];
-    btn.titleLabel.font = i==0?[UIFont boldSystemFontOfSize:17]:[UIFont systemFontOfSize:17];
-    [_suggestionsView addSubview:btn];
-    curX+=size.width+20;
+		NSString *suggestion = [word word];
+		CGSize size = [suggestion sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]}];
+		UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(curX, (self.frame.size.height-size.height-2)/2, size.width+10, size.height+2)];
+		[btn setTitle:suggestion forState:UIControlStateNormal];
+		[btn addTarget:self action:@selector(callDelegateWithSuggestionButton:) forControlEvents:UIControlEventTouchUpInside];
+		btn.titleLabel.font = i==0?[UIFont boldSystemFontOfSize:17]:[UIFont systemFontOfSize:17];
+		[_suggestionsView addSubview:btn];
+		curX+=size.width+20;
 		i++;
 	}
 	

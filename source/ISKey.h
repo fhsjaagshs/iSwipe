@@ -12,6 +12,7 @@
 
 @property (nonatomic, assign) char letter;
 @property (nonatomic, assign) double angle;
+@property (nonatomic, assign) BOOL intentional;
 @property (nonatomic, strong) NSMutableArray *pts;
 @property (nonatomic, readonly) CGPoint avg;
 
