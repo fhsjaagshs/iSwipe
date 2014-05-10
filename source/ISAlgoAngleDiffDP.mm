@@ -65,7 +65,7 @@ static double calcWeight(NSArray *keys, NSString *word, double** mat){
     }
     delete[] mat;
     
-    return [matches sortedArrayUsingSelector:@selector(:compare)];
+    return [matches sortedArrayUsingSelector:@selector(compare:)];
 }
 
 @end

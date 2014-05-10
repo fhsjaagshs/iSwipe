@@ -11,6 +11,7 @@
 #import "ISWord.h"
 #import "ISKey.h"
 #import "ISAlgoHybrid.h"
+#import "ISAlgoAngleDiffDP.h"
 
 #import "headers/UIKBTree.h"
 
@@ -72,16 +73,9 @@
   [s close];
   [db close];
   
-  /*NSMutableArray *intentional_keys = [NSMutableArray array];
-  [intentional_keys addObject:_keys.firstObject];
-  for (int i = 1; i < _keys.count-1; i++) {
-    ISKey *key = _keys[i];
-    if (key.intentional) [intentional_keys addObject:key];
-  }
-  [intentional_keys addObject:_keys.lastObject];*/
-
   NSArray *arr = [ISAlgoHybrid findMatch:_keys fromWords:iswords];
-	
+
+    if (arr.count == 0) arr = [ISAlgoAngleDiffDP findMatch:_keys fromWords:iswords];
   if (arr.count == 0) return arr;
 
   NSMutableArray *ret = [NSMutableArray array];
