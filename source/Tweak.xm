@@ -26,26 +26,27 @@
 		%orig;
 	}
 }
+
+- (void)handleClear {
+  [[ISController sharedInstance].suggestionsView hideAnimated:YES];
+	%orig;
+}
 	
 %end
 
 %hook UIKeyboardLayoutStar
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    %orig;
-    [[ISController sharedInstance] forwardMethod:self sel:_cmd touches:touches event:event];
+  %orig;
+  [[ISController sharedInstance] forwardMethod:self sel:_cmd touches:touches event:event];
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    %orig;
-    [[ISController sharedInstance] forwardMethod:self sel:_cmd touches:touches event:event];
+  %orig;
+  [[ISController sharedInstance] forwardMethod:self sel:_cmd touches:touches event:event];
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    %orig;
-    [[ISController sharedInstance] forwardMethod:self sel:_cmd touches:touches event:event];
-}
-
-- (void)clearInput {
-	%orig;
-	[[ISController sharedInstance].suggestionsView hideAnimated:YES];
+  %orig;
+  [[ISController sharedInstance] forwardMethod:self sel:_cmd touches:touches event:event];
 }
 
 %end

@@ -13,6 +13,6 @@
 @class ISData;
 @interface ISAlgoAngleDiffGreedy : NSObject
 
-+ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dictionary;
++ (NSArray *)findMatch:(ISData *)data fromWords:(NSArray *)words;
 
 @end

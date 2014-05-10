@@ -8,7 +8,7 @@
 
 #import "ISKey.h"
 #import "ISDefines.h"
-#import "headers/UIKeyboardImpl.h"
+#import "headers/UIKBTree.h"
 
 @implementation ISKey
 
@@ -77,12 +77,15 @@ static inline double calcAngle(CGPoint p1, CGPoint p2, CGPoint p3){
 		// TODO: Potentially set angle to 180??? Would this skew towards words that are 
   }
 	
-	//CALayer *key = [[[UIKeyboardImpl activeInstance]layoutForKeyHitTest]hitTest:_avg];
-	//UIView *layoutStar = [[UIKeyboardImpl activeInstance]hitTest:_avg withEvent:nil];
-	//NSLog(@"is1: %@",[layoutStar hitTest:_avg withEvent:nil]);
-//	CGPoint keyCenter = CGPointMake(key.bounds.size.width/2,key.bounds.size.height/2);
-//	double acceptedRadius = MAX(key.bounds.size.width,key.bounds.size.height)/2;
-//	self.intentional = (dist(keyCenter.x-_avg.x,keyCenter.y-_avg.y) <= acceptedRadius);
+  CGPoint keyCenter = CGPointMake(_tree.frame.origin.x+(_tree.frame.size.width/2), _tree.frame.origin.y+(_tree.frame.size.height/2));
+  double acceptedRadius = MIN(_tree.frame.size.width, _tree.frame.size.height)/2;
+ // NSLog(@"iswipe: %f/%f",dist(keyCenter.x-_avg.x, keyCenter.y-_avg.y),acceptedRadius);
+  self.intentional = (dist(keyCenter.x-_avg.x, keyCenter.y-_avg.y) <= acceptedRadius);
+  
+  if (_intentional) {
+    NSLog(@"iswipe: %@",_tree.displayString);
+  }
+  
 }
 
 @end

@@ -35,20 +35,20 @@ static double getValue(ISData *data, ISWord* isword){
     return val;
 }
 
-+ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict {
-    NSMutableArray *arr = [NSMutableArray array];
++ (NSArray *)findMatch:(ISData *)data fromWords:(NSArray *)words {
+    NSMutableArray *matches = [NSMutableArray array];
 	
     int ct = 0;
-    for (ISWord *str in dict) {
-        double val = getValue(data, str);
-        str.weight = val*(1+0.5*((int)dict.count-ct)/dict.count);
+    for (ISWord *word in words) {
+        double val = getValue(data, word);
+        word.weight = val*(1+0.5*((int)words.count-ct)/words.count);
 		
-        if (val != BAD) [arr addObject:str];
+        if (val != BAD) [matches addObject:word];
 		
         ct++;
     }
     
-    return arr;
+    return [matches sortedArrayUsingSelector:@selector(compare:)];
 }
 
 @end

@@ -12,6 +12,8 @@
 #import "ISKey.h"
 #import "ISAlgoHybrid.h"
 
+#import "headers/UIKBTree.h"
+
 #import "fmdb/FMDatabase.h"
 
 @implementation ISData
@@ -23,6 +25,21 @@
     _cur = nil;
   }
   return self;
+}
+
+- (void)addPoint:(CGPoint)p forKeyTree:(UIKBTree *)t {
+  if (!t || t.displayString.length != 1) return;
+  
+  NSString *k = t.displayString.lowercaseString;
+  
+  if (!_cur || [k characterAtIndex:0] != _cur.letter) {
+    [_cur compute];
+    self.cur = [ISKey keyWithLetter:[k characterAtIndex:0]];
+    _cur.tree = t;
+    [_keys addObject:_cur];
+  }
+    
+  [_cur add:p];
 }
 
 - (void)addData:(CGPoint)p forKey:(NSString *)k {
@@ -41,24 +58,20 @@
   [_cur compute];
 }
 
-- (NSArray *)findMatches {
-	for (ISKey *key in _keys.mutableCopy) {
-		if (key.intentional == false) [_keys removeObject:key];
-	}
-    
+- (NSArray *)findMatches {  
   // Intentional, iSwipe takes no performance hit from this.
   FMDatabase *db = [FMDatabase databaseWithPath:@"/usr/share/iSwipe/dictionaries.db"];
 	
   // This is where the sqlite3 object is created
   if (![db open]) {
     [db close]; // Not 100% sure of this one
-    return [NSMutableArray array];
+    return [NSArray array];
   }
 	
   NSMutableArray *iswords = [NSMutableArray array];
     
-  int first = [_keys.firstObject letter];
-  int last = [_keys.lastObject letter];
+  char first = [_keys.firstObject letter];
+  char last = [_keys.lastObject letter];
     
   NSString *like = [NSString stringWithFormat:@"%c%%%c",first,last];
 
@@ -71,8 +84,16 @@
 	
   [s close];
   [db close];
+  
+  NSMutableArray *intentional_keys = [NSMutableArray array];
+  [intentional_keys addObject:_keys.firstObject];
+  for (int i = 1; i < _keys.count-1; i++) {
+    ISKey *key = _keys[i];
+    if (key.intentional) [intentional_keys addObject:key];
+  }
+  [intentional_keys addObject:_keys.lastObject];
 
-  NSMutableArray *arr = [[ISAlgoHybrid findMatch:self dict:iswords]sortedArrayUsingSelector:@selector(compare:)];
+  NSArray *arr = [ISAlgoHybrid findMatch:intentional_keys fromWords:iswords];
 	
   if (arr.count == 0) return arr;
 
@@ -83,7 +104,7 @@
     if (word.weight > best*0.5) [ret addObject:word];
   }
 	
-  return ret;
+  return [NSArray arrayWithArray:ret];
 }
 
 @end

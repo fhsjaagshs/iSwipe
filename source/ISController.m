@@ -52,7 +52,8 @@
       self.startingTouch = nil;
     } else {
       if (key.length == 1) {
-        [_swipe addData:point forKey:key];
+        [_swipe addPoint:point forKeyTree:tree];
+        //[_swipe addData:point forKey:key];
       }
 		}
 		[_scribbleView drawToTouch:touch];
@@ -61,21 +62,21 @@
     [_swipe end];
 
     if (_swipe.keys.count >= 2) {
-      NSArray *arr = [_swipe findMatches];
+      NSArray *matches = [_swipe findMatches];
 			
-      if (arr.count != 0) {
+      if (matches.count > 0) {
         if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
           [self deleteChar];
         }
+        
+        [self addInput:[matches.firstObject word]];
 				
-        [self addInput:[arr.firstObject word]];
-				
-        if (arr.count > 1) {
-					_suggestionsView.suggestions = arr;
+        if (matches.count > 1) {
+					_suggestionsView.suggestions = matches;
 					[_suggestionsView showAnimated:YES];
         }
       } else {
-          [self deleteChar];
+        [self deleteChar];
       }
     }
     [self resetSwipe];
@@ -98,18 +99,19 @@
 
 - (void)deleteLast {
   for (int i = 0; i < matchLength; i++) {
-    [[UIKeyboardImpl activeInstance]handleDelete];
+    [self deleteChar];
   }   
 }
 
 - (void)suggestionsView:(ISSuggestionsView *)suggestionsView didSelectSuggestion:(NSString *)suggestion {
   [self deleteLast];
   [self deleteChar];
+  // - (void)replaceText:(id)arg1;
   [self addInput:suggestion];
   [_suggestionsView hideAnimated:YES];
 }
 
-- (void)addInput:(NSString *)input{
+- (void)addInput:(NSString *)input {
   UIKeyboardImpl *kb = [UIKeyboardImpl activeInstance];
     
   matchLength = input.length;
@@ -132,13 +134,11 @@
     
 - (void)kbinput:(NSString *)input {
   UIKeyboardImpl *kb = [UIKeyboardImpl activeInstance];
-	if ([kb respondsToSelector:@selector(insertText:)]) {
+	/*if ([kb respondsToSelector:@selector(insertText:)] && ![input isEqualToString:@" "]) {
 		[kb insertText:input];
-	} else if ([kb respondsToSelector:@selector(addInputString:)]) {
+	} else*/ if ([kb respondsToSelector:@selector(addInputString:)]) {
     [kb addInputString:input];
-  } else if ([kb respondsToSelector:@selector(handleStringInput:fromVariantKey:)]) {
-    [kb handleStringInput:input fromVariantKey:NO];
-  }   
+  }
 }
 
 @end

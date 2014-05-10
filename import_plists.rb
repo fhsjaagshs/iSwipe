@@ -6,23 +6,9 @@ require "cfpropertylist"
 
 DB = Sequel.connect("sqlite://dictionaries.db")
 
-DB.run("CREATE TABLE dict_en (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, word varchar(255), match varchar(255))")
+DB.run("CREATE TABLE dict_en (word varchar(255) NOT NULL PRIMARY KEY, match varchar(255) NOT NULL)")
 
-DB.run("CREATE TABLE dict_en_tmp (id integer NOT NULL PRIMARY KEY AUTOINCREMENT, word varchar(255), match varchar(255))")
-
-=begin
-DB.create_table :dict_en do
-  primary_key :id
-  String :word
-  String :match
-end
-
-DB.create_table :dict_en_tmp do
-  primary_key :id
-  String :word
-  String :match
-end
-=end
+DB.run("CREATE TABLE dict_en_tmp (word varchar(255) NOT NULL PRIMARY KEY, match varchar(255) NOT NULL)")
 
 dict_en_tmp = DB[:dict_en_tmp]
 

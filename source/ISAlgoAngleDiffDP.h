@@ -15,6 +15,6 @@
 //in practice there is little, if any, difference from greedy
 @interface ISAlgoAngleDiffDP : NSObject
 
-+ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dictionary;
++ (NSArray *)findMatch:(ISData *)data fromWords:(NSArray *)words;
 
 @end

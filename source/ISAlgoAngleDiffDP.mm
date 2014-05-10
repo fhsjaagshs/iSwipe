@@ -24,10 +24,10 @@ static double getValue(ISData *data, ISWord* iword, double** mat){
     }
     mat[0][0] = BASE;
     
-    for(int i = 1; i <= word.length; i++) {
-        for(int j = 1; j <= keys.count; j++) {
+    for (int i = 1; i <= word.length; i++) {
+        for (int j = 1; j <= keys.count; j++) {
             mat[i][j] = BAD;
-            if( [word characterAtIndex:i-1] == [keys[j-1] letter] && (mat[i-1][j-1] != -1 || mat[i-1][j] != BAD) ){ //matches
+            if ([word characterAtIndex:i-1] == [keys[j-1] letter] && (mat[i-1][j-1] != -1 || mat[i-1][j] != BAD)) { //matches
                     ISKey *kk = keys[j-1];
                     mat[i][j] = MAX(mat[i-1][j-1] + kk.angle , mat[i-1][j] + BONUS);
                 }
@@ -40,11 +40,11 @@ static double getValue(ISData *data, ISWord* iword, double** mat){
     return mat[word.length][keys.count];
 }
 
-+ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict{
-    NSMutableArray *arr = [NSMutableArray array];
++ (NSArray *)findMatch:(ISData *)data fromWords:(NSArray *)words {
+    NSMutableArray *matches = [NSMutableArray array];
 
     int max = 0;
-    for (ISWord * word in dict) {
+    for (ISWord *word in words) {
         max = MAX(max, word.match.length);
     }
     max++;
@@ -55,10 +55,10 @@ static double getValue(ISData *data, ISWord* iword, double** mat){
         mat[i] = new double[data.keys.count+1];
     }
     
-    for (ISWord * str in dict) {
-        double val = getValue(data, str, mat);
-        str.weight = val;
-        if (val != BAD) [arr addObject:str];
+    for (ISWord *word in words) {
+        double val = getValue(data, word, mat);
+        word.weight = val;
+        if (val != BAD) [matches addObject:word];
     }
     
     for (int i = 0; i < max; i++) {
@@ -66,7 +66,7 @@ static double getValue(ISData *data, ISWord* iword, double** mat){
     }
     delete[] mat;
     
-    return arr;
+    return [matches sortedArrayUsingSelector:@selector(:compare)];
 }
 
 @end

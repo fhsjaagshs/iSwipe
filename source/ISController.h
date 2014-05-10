@@ -2,7 +2,7 @@
 #import "headers/UIKeyboardLayoutStar.h"
 #import "headers/UIKeyboardImpl.h"
 #import "headers/UIKeyboard.h"
-#import "headers/UIKBKey.h"
+#import "headers/UIKBTree.h"
 #import "headers/UIKBKeyView.h"
 #import "ISScribbleView.h"
 #import "ISSuggestionsView.h"

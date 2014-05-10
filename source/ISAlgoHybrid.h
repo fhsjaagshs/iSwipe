@@ -11,6 +11,6 @@
 @class ISData;
 @interface ISAlgoHybrid : NSObject
 
-+ (NSMutableArray *)findMatch:(ISData *)data dict:(NSArray *)dict;
++ (NSArray *)findMatch:(NSArray *)keys fromWords:(NSArray *)words;
 
 @end
