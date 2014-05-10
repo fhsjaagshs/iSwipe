@@ -7,14 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ISData.h"
-#import "ISKey.h"
-#import "ISWord.h"
 
 //find best possible matching
 //in practice there is little, if any, difference from greedy
 @interface ISAlgoAngleDiffDP : NSObject
 
-+ (NSArray *)findMatch:(ISData *)data fromWords:(NSArray *)words;
++ (NSArray *)findMatch:(NSArray *)keys fromWords:(NSArray *)words;
 
 @end

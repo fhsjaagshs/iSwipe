@@ -34,24 +34,11 @@
   
   if (!_cur || [k characterAtIndex:0] != _cur.letter) {
     [_cur compute];
-    self.cur = [ISKey keyWithLetter:[k characterAtIndex:0]];
-    _cur.tree = t;
+		self.cur = [ISKey keyWithTree:t];
     [_keys addObject:_cur];
   }
     
-  [_cur add:p];
-}
-
-- (void)addData:(CGPoint)p forKey:(NSString *)k {
-  if (!k || k.length != 1) return;
-
-  if (!_cur || [k characterAtIndex:0] != _cur.letter) {
-    [_cur compute];
-    self.cur = [ISKey keyWithLetter:[k characterAtIndex:0]];
-    [_keys addObject:_cur];
-  }
-    
-  [_cur add:p];
+  [_cur addPoint:p];
 }
 
 - (void)end {
@@ -85,15 +72,15 @@
   [s close];
   [db close];
   
-  NSMutableArray *intentional_keys = [NSMutableArray array];
+  /*NSMutableArray *intentional_keys = [NSMutableArray array];
   [intentional_keys addObject:_keys.firstObject];
   for (int i = 1; i < _keys.count-1; i++) {
     ISKey *key = _keys[i];
     if (key.intentional) [intentional_keys addObject:key];
   }
-  [intentional_keys addObject:_keys.lastObject];
+  [intentional_keys addObject:_keys.lastObject];*/
 
-  NSArray *arr = [ISAlgoHybrid findMatch:intentional_keys fromWords:iswords];
+  NSArray *arr = [ISAlgoHybrid findMatch:_keys fromWords:iswords];
 	
   if (arr.count == 0) return arr;
 

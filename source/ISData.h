@@ -8,7 +8,6 @@
 @property (nonatomic, strong) NSMutableArray *keys;
 
 - (void)addPoint:(CGPoint)p forKeyTree:(UIKBTree *)t;
-- (void)addData:(CGPoint)p forKey:(NSString *)k;
 - (void)end;
 
 - (NSArray *)findMatches;

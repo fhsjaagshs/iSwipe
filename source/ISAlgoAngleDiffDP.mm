@@ -8,13 +8,12 @@
 
 #import "ISAlgoAngleDiffDP.h"
 #import "ISDefines.h"
+#import "ISKey.h"
+#import "ISWord.h"
 
 @implementation ISAlgoAngleDiffDP
 
-static double getValue(ISData *data, ISWord* iword, double** mat){
-    NSArray *keys = data.keys;
-    NSString *word = iword.word;
-    
+static double calcWeight(NSArray *keys, NSString *word, double** mat){
     for (int i = 0; i <= word.length; i++) {
         mat[i][0] = BAD;
     }
@@ -40,25 +39,25 @@ static double getValue(ISData *data, ISWord* iword, double** mat){
     return mat[word.length][keys.count];
 }
 
-+ (NSArray *)findMatch:(ISData *)data fromWords:(NSArray *)words {
++ (NSArray *)findMatch:(NSArray *)keys fromWords:(NSArray *)words {
     NSMutableArray *matches = [NSMutableArray array];
 
     int max = 0;
     for (ISWord *word in words) {
-        max = MAX(max, word.match.length);
+        max = MAX(max, word.match.length); // real WTF moment here
     }
     max++;
     
     double** mat = new double*[max];
     
     for (int i = 0; i < max; i++) {
-        mat[i] = new double[data.keys.count+1];
+        mat[i] = new double[keys.count+1];
     }
     
-    for (ISWord *word in words) {
-        double val = getValue(data, word, mat);
-        word.weight = val;
-        if (val != BAD) [matches addObject:word];
+    for (ISWord *isword in words) {
+        double val = calcWeight(keys, isword.word, mat);
+        isword.weight = val;
+        if (val != BAD) [matches addObject:isword];
     }
     
     for (int i = 0; i < max; i++) {

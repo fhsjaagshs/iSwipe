@@ -7,19 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "headers/UIKBTree.h"
 
-@class UIKBTree;
 @interface ISKey : NSObject
 
 @property (nonatomic, assign) char letter;
 @property (nonatomic, assign) double angle;
-@property (nonatomic, assign) BOOL intentional;
 @property (nonatomic, strong) NSMutableArray *pts;
 @property (nonatomic, readonly) CGPoint avg;
 @property (nonatomic, strong) UIKBTree *tree;
 
-+ (ISKey *)keyWithLetter:(char)c;
-- (void)add:(CGPoint)p;
++ (ISKey *)keyWithTree:(UIKBTree *)tree;
+- (CGRect)frame;
+- (void)addPoint:(CGPoint)p;
 - (void)compute;
 
 @end

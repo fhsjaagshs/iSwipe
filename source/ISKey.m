@@ -8,26 +8,29 @@
 
 #import "ISKey.h"
 #import "ISDefines.h"
-#import "headers/UIKBTree.h"
 
 @implementation ISKey
 
-+ (ISKey *)keyWithLetter:(char)c {
-	return [[[self class]alloc]initWithLetter:c];
++ (ISKey *)keyWithTree:(UIKBTree *)tree {
+	return [[[self class]alloc]initWithTree:tree];
 }
 
-- (instancetype)initWithLetter:(char)c {
+- (instancetype)initWithTree:(UIKBTree *)tree {
 	self = [super init];
 	if (self) {
 	  _angle = 0;
-	  _letter = c;
+	  _letter = [tree.displayString.lowercaseString characterAtIndex:0];
 	  _pts = [NSMutableArray array];
-		_intentional = YES;
+		_tree = tree;
 	}
 	return self;
 }
 
-- (void)add:(CGPoint)p {
+- (CGRect)frame {
+    return _tree.frame;
+}
+
+- (void)addPoint:(CGPoint)p {
   [_pts addObject:[NSValue valueWithCGPoint:p]];
 }
 
@@ -74,18 +77,8 @@ static inline double calcAngle(CGPoint p1, CGPoint p2, CGPoint p3){
     
     _avg = CGPointMake(tx/_pts.count, ty/_pts.count);
 		
-		// TODO: Potentially set angle to 180??? Would this skew towards words that are 
+    // TODO: Potentially set angle to 180??? Would this skew towards words that are
   }
-	
-  CGPoint keyCenter = CGPointMake(_tree.frame.origin.x+(_tree.frame.size.width/2), _tree.frame.origin.y+(_tree.frame.size.height/2));
-  double acceptedRadius = MIN(_tree.frame.size.width, _tree.frame.size.height)/2;
- // NSLog(@"iswipe: %f/%f",dist(keyCenter.x-_avg.x, keyCenter.y-_avg.y),acceptedRadius);
-  self.intentional = (dist(keyCenter.x-_avg.x, keyCenter.y-_avg.y) <= acceptedRadius);
-  
-  if (_intentional) {
-    NSLog(@"iswipe: %@",_tree.displayString);
-  }
-  
 }
 
 @end

@@ -9,9 +9,7 @@
 #import "ISData.h"
 
 @class ISSuggestionsView;
-@interface ISController : NSObject {
-    int matchLength;
-}
+@interface ISController : NSObject
 
 @property (nonatomic, strong) ISSuggestionsView *suggestionsView;
 @property (nonatomic, strong) ISScribbleView *scribbleView;
